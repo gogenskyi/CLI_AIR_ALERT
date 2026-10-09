@@ -3,16 +3,15 @@
 //
 
 #include "../include/api_request.h"
-#include <iostream>
 
 const std::string URL = "https://neptun.in.ua/api/v1/threats";
 
-void api_request::request() {
+cpr::Response api_request::request() {
     auto r = cpr::Get(cpr::Url{URL});
     if (r.error.code != cpr::ErrorCode::OK) {
         throw std::runtime_error(r.error.message);
     }
-
+    return r;
 }
 
 std::vector<std::string> api_request::parsejson(const cpr::Response& json, const std::string& key) {
