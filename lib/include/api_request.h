@@ -17,11 +17,24 @@ class api_request {
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 public:
-    static std::vector<std::string> parsejson(const cpr::Response& json,const std::string& key);
+    static std::vector<std::string> parse(const cpr::Response& json,const std::string& key);
+
+    static std::vector<std::vector<std::string>> parsejson(const cpr::Response &json,const std::vector<std::string>& listkeys);
+
     static cpr::Response request();
-    static void print_info(const std::vector<std::string> &data) {
-        for (auto &el : data) {
-            std::cout<<"|-- "<<"\033[1;31m"<<el<<"\033[0m"<<std::endl;
+    static void print_info(const std::vector<std::vector<std::string>> &data) {
+        int i = 0;
+        for (auto &el : data[0]) {
+            if (i > data[1].size()) {
+                i = 0;
+            }
+            std::string line_bottom;
+            std::string line_upper = "|--\033[1;31m" + el + "\033[0m";
+            if (!data[1][i].empty()) {
+                line_bottom = "\n  |--"+data[1][i];
+            }
+            std::cout<<line_upper<<line_bottom<<std::endl;
+            i++;
         }
     }
 

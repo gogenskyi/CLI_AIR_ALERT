@@ -14,13 +14,21 @@ cpr::Response api_request::request() {
     return r;
 }
 
-std::vector<std::string> api_request::parsejson(const cpr::Response& json, const std::string& key) {
+std::vector<std::string> api_request::parse(const cpr::Response& json, const std::string& key) {
     std::vector<std::string> list;
     nlohmann::json j = nlohmann::json::parse(json.text);
     for (auto item : j["threats"]) {
         if (item.contains(key) && item[key].is_string()) {
             list.push_back(item[key].get<std::string>());
         }
+    }
+    return list;
+}
+std::vector<std::vector<std::string>> api_request::parsejson(const cpr::Response& json,const std::vector<std::string>& listkeys ) {
+    std::vector<std::vector<std::string>> list;
+    list.reserve(listkeys.size());
+    for (const auto& a : listkeys) {
+        list.push_back(parse(json,a));
     }
     return list;
 }
